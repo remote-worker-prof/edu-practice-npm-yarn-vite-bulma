@@ -54,6 +54,7 @@ npm run dev
 - Студенческие материалы: `practice/`.
 - Гайды по инструментам: `practice/guides/`.
 - Архитектура/дизайн: `docs/ARCHITECTURE.md`, `docs/DESIGN.md`.
+- Git/SSH: `docs/GIT_SSH_GUIDE.md`.
 
 ## Troubleshooting (кратко)
 - Если не собирается Sass: проверьте порядок импортов в `src/styles/main.scss`.

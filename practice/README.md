@@ -156,12 +156,282 @@ npm run preview
 
 После базового минимума можно добавить один или несколько дополнительных модулей. Выберите минимум один вариант и зафиксируйте в отчете, что именно сделано.
 
-1. Фильтр проектов по тегам. Минимум: кнопки‑фильтры и скрытие/показ карточек. Проверка: меняется набор карточек при выборе тега.
-2. Переключение темы. Минимум: две темы и переключатель. Проверка: сохраняется выбранная тема после обновления (localStorage).
-3. Плавная навигация по якорям. Минимум: плавный скролл и активное состояние пункта меню. Проверка: переходы заметно плавные.
-4. Форма контакта с базовой валидацией. Минимум: проверка пустых полей и email‑формата. Проверка: при ошибке выводится сообщение.
-5. Секция достижений со счетчиками. Минимум: анимированное увеличение чисел при появлении секции. Проверка: счетчики запускаются при скролле.
-6. Умный список навыков. Минимум: отображение навыков с группировкой и короткими описаниями. Проверка: навык раскрывается/сворачивается.
+Ниже — подробные сценарии расширения с шагами и примерами кода. Все примеры адаптированы под текущую структуру проекта.
+
+### 7.1. Фильтр проектов по тегам
+**Идея**: у каждой карточки есть набор тегов, а кнопки‑фильтры показывают только подходящие карточки.
+
+**Минимум**: кнопки‑фильтры и скрытие/показ карточек. Проверка: меняется набор карточек при выборе тега.
+
+**Разметка**: добавьте `data-tags` и кнопки‑фильтры.
+```html
+<div class="buttons" id="projectFilters">
+  <button class="button is-light" data-filter="all">Все</button>
+  <button class="button is-light" data-filter="ui">UI</button>
+  <button class="button is-light" data-filter="landing">Landing</button>
+</div>
+
+<div class="columns is-multiline">
+  <div class="column is-one-third" data-tags="ui,landing">
+    <div class="card">...</div>
+  </div>
+  <div class="column is-one-third" data-tags="ui">
+    <div class="card">...</div>
+  </div>
+</div>
+```
+
+**JS‑логика** (показ/скрытие через класс `is-hidden`):
+```js
+const filters = document.querySelector('#projectFilters')
+const cards = [...document.querySelectorAll('[data-tags]')]
+
+filters?.addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-filter]')
+  if (!button) return
+
+  const filter = button.dataset.filter
+  cards.forEach((card) => {
+    const tags = (card.dataset.tags || '').split(',')
+    const matches = filter === 'all' || tags.includes(filter)
+    card.classList.toggle('is-hidden', !matches)
+  })
+})
+```
+
+**Ссылки на исходники**: `index.html`, `src/main.js`, `src/styles/main.scss`.
+
+---
+
+### 7.2. Переключение темы
+**Идея**: у страницы есть минимум две темы (например, светлая и темная). Выбор сохраняется в `localStorage`.
+
+**Минимум**: две темы и переключатель. Проверка: сохраняется выбранная тема после обновления.
+
+**Разметка**: добавьте кнопку или переключатель.
+```html
+<button class="button is-small" id="themeToggle">Сменить тему</button>
+```
+
+**CSS‑переменные**: определите цвета для двух тем.
+```scss
+:root {
+  --bg: #ffffff;
+  --text: #1f2937;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --text: #e2e8f0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+```
+
+**JS‑логика**:
+```js
+const toggle = document.querySelector('#themeToggle')
+const key = 'theme'
+
+const applyTheme = (value) => {
+  document.documentElement.setAttribute('data-theme', value)
+}
+
+const saved = localStorage.getItem(key) || 'light'
+applyTheme(saved)
+
+toggle?.addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+  localStorage.setItem(key, next)
+  applyTheme(next)
+})
+```
+
+**Ссылки на исходники**: `index.html`, `src/main.js`, `src/styles/main.scss`.
+
+---
+
+### 7.3. Плавная навигация по якорям
+**Идея**: клики по пунктам меню плавно прокручивают страницу, активный пункт подсвечивается.
+
+**Минимум**: плавный скролл и активное состояние пункта меню. Проверка: переходы заметно плавные.
+
+**CSS‑плавность**:
+```scss
+html {
+  scroll-behavior: smooth;
+}
+```
+
+**JS‑подсветка активного пункта** (через `IntersectionObserver`):
+```js
+const links = [...document.querySelectorAll('a[href^="#"]')]
+const sections = links
+  .map((link) => document.querySelector(link.getAttribute('href')))
+  .filter(Boolean)
+
+const setActive = (id) => {
+  links.forEach((link) => {
+    link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`)
+  })
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) setActive(entry.target.id)
+  })
+}, { threshold: 0.6 })
+
+sections.forEach((section) => observer.observe(section))
+```
+
+**Ссылки на исходники**: `index.html`, `src/main.js`, `src/styles/main.scss`.
+
+---
+
+### 7.4. Форма контакта с базовой валидацией
+**Идея**: форма показывает ошибки при неправильном вводе и не отправляется, пока поля не корректны.
+
+**Минимум**: проверка пустых полей и email‑формата. Проверка: при ошибке выводится сообщение.
+
+**Разметка**:
+```html
+<form id="contactForm">
+  <div class="field">
+    <label class="label">Имя</label>
+    <div class="control">
+      <input class="input" name="name" type="text" />
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Email</label>
+    <div class="control">
+      <input class="input" name="email" type="email" />
+    </div>
+  </div>
+  <p class="help is-danger" id="contactError"></p>
+  <button class="button is-primary" type="submit">Отправить</button>
+</form>
+```
+
+**JS‑валидация**:
+```js
+const form = document.querySelector('#contactForm')
+const error = document.querySelector('#contactError')
+
+form?.addEventListener('submit', (event) => {
+  event.preventDefault()
+  const formData = new FormData(form)
+  const name = String(formData.get('name') || '').trim()
+  const email = String(formData.get('email') || '').trim()
+
+  if (!name || !email) {
+    error.textContent = 'Заполните все поля.'
+    return
+  }
+
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  if (!isEmail) {
+    error.textContent = 'Введите корректный email.'
+    return
+  }
+
+  error.textContent = ''
+  form.reset()
+})
+```
+
+**Ссылки на исходники**: `index.html`, `src/main.js`.
+
+---
+
+### 7.5. Секция достижений со счетчиками
+**Идея**: числа плавно увеличиваются при появлении секции на экране.
+
+**Минимум**: анимированное увеличение чисел при появлении секции. Проверка: счетчики запускаются при скролле.
+
+**Разметка**:
+```html
+<section id="stats">
+  <div class="columns">
+    <div class="column">
+      <p class="title" data-counter="120">0</p>
+      <p class="subtitle">Проектов</p>
+    </div>
+  </div>
+</section>
+```
+
+**JS‑анимация**:
+```js
+const counters = [...document.querySelectorAll('[data-counter]')]
+
+const animate = (el) => {
+  const target = Number(el.dataset.counter)
+  const duration = 1200
+  const start = performance.now()
+
+  const tick = (now) => {
+    const progress = Math.min((now - start) / duration, 1)
+    el.textContent = Math.floor(progress * target)
+    if (progress < 1) requestAnimationFrame(tick)
+  }
+
+  requestAnimationFrame(tick)
+}
+
+const statsObserver = new IntersectionObserver((entries, obs) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      animate(entry.target)
+      obs.unobserve(entry.target)
+    }
+  })
+}, { threshold: 0.6 })
+
+counters.forEach((counter) => statsObserver.observe(counter))
+```
+
+**Ссылки на исходники**: `index.html`, `src/main.js`.
+
+---
+
+### 7.6. Умный список навыков
+**Идея**: навыки сгруппированы, каждый элемент раскрывается, показывая краткое описание.
+
+**Минимум**: отображение навыков с группировкой и короткими описаниями. Проверка: навык раскрывается/сворачивается.
+
+**Разметка** (группы + раскрытие):
+```html
+<div class="content">
+  <h3 class="title is-4">Frontend</h3>
+  <details>
+    <summary>HTML</summary>
+    <p>Семантика, доступность и структура страницы.</p>
+  </details>
+  <details>
+    <summary>CSS</summary>
+    <p>Модульные стили и работа с UI‑фреймворком.</p>
+  </details>
+</div>
+```
+
+**CSS‑акцент**:
+```scss
+details {
+  margin-bottom: 0.75rem;
+}
+
+details > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+```
+
+**Ссылки на исходники**: `index.html`, `src/styles/main.scss`.
 
 ---
 
