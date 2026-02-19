@@ -1,0 +1,11 @@
+// 1) Переменные Bulma должны быть объявлены до импорта фреймворка.
+@import "./variables";
+
+// 2) Полная сборка Bulma (на базе наших переменных).
+@import "bulma/bulma";
+
+// 3) Собственные стили проекта.
+@import "./base";
+@import "./layout";
+@import "./components";
+@import "./utilities";

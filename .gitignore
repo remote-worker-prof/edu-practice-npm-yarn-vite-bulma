@@ -1,0 +1,10 @@
+.venv/
+node_modules/
+dist/
+.vite/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/install-state.gz
+.yarn/build-state.yml
+.pnp.cjs
+.pnp.loader.mjs

@@ -1,0 +1,88 @@
+.ambient {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 10% 15%, rgba($sun, 0.12), transparent 55%),
+    radial-gradient(circle at 85% 20%, rgba($sea, 0.18), transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba($rust, 0.18), transparent 55%);
+  pointer-events: none;
+  z-index: -2;
+}
+
+.nav-glass {
+  backdrop-filter: blur(18px);
+  background: rgba(243, 239, 231, 0.84);
+  border-bottom: 1px solid rgba(31, 27, 22, 0.08);
+}
+
+.navbar .navbar-item {
+  font-weight: 600;
+  color: $ink;
+}
+
+.navbar .navbar-item:hover {
+  color: $primary;
+}
+
+.brand {
+  font-family: $family-secondary;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-sculpt {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(140deg, #f8f2ea 0%, #f2eee5 48%, #efe5d8 100%);
+}
+
+.hero-sculpt::before,
+.hero-sculpt::after {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  filter: blur(0);
+  opacity: 0.4;
+  z-index: 0;
+}
+
+.hero-sculpt::before {
+  top: -120px;
+  right: -120px;
+  background: radial-gradient(circle, rgba($sea, 0.35), transparent 70%);
+}
+
+.hero-sculpt::after {
+  bottom: -180px;
+  left: -140px;
+  background: radial-gradient(circle, rgba($rust, 0.4), transparent 70%);
+}
+
+.hero-sculpt .hero-body {
+  position: relative;
+  z-index: 1;
+}
+
+.section-muted {
+  background: $clay-dark;
+}
+
+.footer-soft {
+  background: $clay-dark;
+  border-top: 1px solid rgba(31, 27, 22, 0.08);
+}
+
+@media (max-width: 768px) {
+  .hero-sculpt {
+    text-align: center;
+  }
+
+  .hero-sculpt .buttons {
+    justify-content: center;
+  }
+
+  .nav-glass .navbar-menu {
+    background: rgba(243, 239, 231, 0.96);
+  }
+}

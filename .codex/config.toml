@@ -1,0 +1,3 @@
+[mcp_servers.beads]
+command = ".venv/bin/beads-mcp"
+env = { BEADS_DB = ".beads/beads.db" }

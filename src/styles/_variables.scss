@@ -1,0 +1,48 @@
+// Подключаем шрифты, которые используются в теме.
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap");
+
+// Базовая палитра проекта.
+// Эти переменные — строительные блоки, из которых собирается тема.
+$ink: #1f1b16;
+$clay: #f3efe7;
+$clay-dark: #ebe4d8;
+$rust: #c65a3a;
+$sea: #2c6d6b;
+$sun: #f5b453;
+$plum: #5a2a42;
+
+// Привязка палитры к переменным Bulma.
+// Меняйте эти значения, чтобы перекрасить все компоненты фреймворка.
+$primary: $rust;
+$link: $sea;
+$info: $sea;
+$warning: $sun;
+$danger: #b84c3a;
+$success: #2f8f6b;
+
+// Цвета фона и текста по умолчанию.
+$body-background-color: $clay;
+$body-color: $ink;
+$text: $ink;
+$text-light: #7a6e60;
+
+// Типографика: основной и акцентный шрифты.
+$family-primary: "Space Grotesk", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+$family-secondary: "Fraunces", "Georgia", serif;
+
+// Скругления и толщина границ — влияют на общий характер дизайна.
+$radius: 18px;
+$radius-large: 28px;
+$button-border-width: 2px;
+$control-border-width: 2px;
+
+// Настройки навигации.
+$navbar-height: 4.2rem;
+$navbar-item-img-max-height: 2.6rem;
+
+// Вертикальные отступы секций.
+$section-padding: 5rem 1.5rem;
+
+// Тени карточек и контейнеров.
+$box-shadow: 0 32px 60px -40px rgba(31, 27, 22, 0.6);
+$card-shadow: 0 30px 80px -60px rgba(31, 27, 22, 0.55);
